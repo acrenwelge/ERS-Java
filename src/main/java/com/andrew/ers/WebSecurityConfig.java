@@ -1,6 +1,7 @@
 package com.andrew.ers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -19,17 +20,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
+	@Value("${spring.profiles.active}")
+	private String environment;
+	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		if (environment.equals("prod")) {
+			// enforce HTTPS
+			http.requiresChannel().anyRequest().requiresSecure();
+		} else {
+			// disable some security settings for dev purposes
+			http.csrf().disable();
+			http.cors().disable();
+			http.headers().frameOptions().disable();			
+		}
 		// permit any and all requests
 		http.authorizeRequests()
 		  .anyRequest().permitAll()
 		  .and()
 		  .logout().permitAll();
-		// disable some security settings for dev purposes
-		http.csrf().disable();
-		http.cors().disable();
-		http.headers().frameOptions().disable();
 	}
 	
 	@Override

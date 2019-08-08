@@ -62,6 +62,14 @@ Also, query params for expenses include: `?before=12-05-2018&after=07-04-2017` f
 
 ## Local Deployment
 
+### Environment
+For prod environment, the following environment variables are required:
+* ERS-db-url
+* ERS-db-username
+* ERS-db-password
+
+You must ensure these are set in the environment, or else pass them as command-line arguments to set as spring boot properties
+
 To run from source code:
 
 ```bash
