@@ -64,9 +64,9 @@ Also, query params for expenses include: `?before=12-05-2018&after=07-04-2017` f
 
 ### Environment
 For prod environment, the following environment variables are required:
-* ERS-db-url
-* ERS-db-username
-* ERS-db-password
+* `ERS_db_url`
+* `ERS_db_username`
+* `ERS_db_password`
 
 You must ensure these are set in the environment, or else pass them as command-line arguments to set as spring boot properties
 
