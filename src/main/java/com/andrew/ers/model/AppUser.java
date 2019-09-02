@@ -1,10 +1,14 @@
 package com.andrew.ers.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -27,13 +31,32 @@ public class AppUser {
 	private String lastName;
 	
 	@NotNull
+	@Column
 	private String password;
 	
 	@Email
 	@NotNull
+	@Column
 	private String email;
 	
+	@Column
 	private String address;
+	
+	@OneToMany
+	@JoinColumn(name="user_id")
+	private List<Reimbursement> reimbursements;
+	
+	public List<Reimbursement> getReimbursements() {
+		return reimbursements;
+	}
+	
+	public void setReimbursements(List<Reimbursement> list) {
+		reimbursements = list;
+	}
+	
+	public void addReimbursement(Reimbursement r) {
+		reimbursements.add(r);
+	}
 
 	public long getId() {
 		return id;

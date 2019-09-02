@@ -38,6 +38,7 @@ public class UserService implements UserDetailsService {
 		udto.setPassword(user.getPassword());
 		udto.setEmail(user.getEmail());
 		udto.setAddress(user.getAddress());
+		udto.setReimbursements(user.getReimbursements());
 		return udto;
 	}
 	
@@ -58,6 +59,7 @@ public class UserService implements UserDetailsService {
 		userEntity.setPassword(userDTO.getPassword());
 		userEntity.setEmail(userDTO.getEmail());
 		userEntity.setAddress(userDTO.getAddress());
+		userEntity.setReimbursements(userDTO.getReimbursements());
 		return userEntity;
 	}
 	

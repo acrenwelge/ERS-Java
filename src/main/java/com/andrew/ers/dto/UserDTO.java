@@ -1,8 +1,12 @@
 package com.andrew.ers.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import com.andrew.ers.model.Reimbursement;
 
 public class UserDTO {
 	private long id;
@@ -32,7 +36,21 @@ public class UserDTO {
 	@NotEmpty
 	private String email;
 	
+	private List<Reimbursement> reimbursements;
+	
 	private String address;
+	
+	public List<Reimbursement> getReimbursements() {
+		return reimbursements;
+	}
+	
+	public void setReimbursements(List<Reimbursement> list) {
+		reimbursements = list;
+	}
+	
+	public void addReimbursement(Reimbursement r) {
+		reimbursements.add(r);
+	}
 	
 	public String getUsername() {
 		return username;
