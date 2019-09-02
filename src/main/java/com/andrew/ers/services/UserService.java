@@ -30,6 +30,7 @@ public class UserService implements UserDetailsService {
 	
 	public static UserDTO convert(AppUser user) {
 		UserDTO udto = new UserDTO();
+		udto.setId(user.getId());
 		udto.setUsername(user.getUsername());
 		udto.setFirstName(user.getFirstName());
 		udto.setLastName(user.getLastName());
@@ -50,6 +51,7 @@ public class UserService implements UserDetailsService {
 	
 	public static AppUser convert(UserDTO userDTO) {
 		AppUser userEntity = new AppUser();
+		userEntity.setId(userDTO.getId());
 		userEntity.setFirstName(userDTO.getFirstName());
 		userEntity.setLastName(userDTO.getLastName());
 		userEntity.setUsername(userDTO.getUsername());
@@ -75,7 +77,7 @@ public class UserService implements UserDetailsService {
 			throw new UserAlreadyExistsException();
 		} else {
 			return userRepo.save(user);
-		}		
+		}
 	}
 	
 	@Override
@@ -85,5 +87,13 @@ public class UserService implements UserDetailsService {
             throw new UsernameNotFoundException(username);
         }
         return new AppUserPrincipal(user);
+	}
+	
+	public void deleteUser(long id) {
+		userRepo.deleteById(id);
+	}
+	
+	public void saveUser(UserDTO userToSave) {
+		userRepo.save(convert(userToSave));
 	}
 }

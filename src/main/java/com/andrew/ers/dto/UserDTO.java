@@ -5,6 +5,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class UserDTO {
+	private long id;
+	
 	@NotNull
 	@NotEmpty
 	private String username;
@@ -86,6 +88,14 @@ public class UserDTO {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
+	public long getId() {
+		return id;
 	}
 
 	@Override
