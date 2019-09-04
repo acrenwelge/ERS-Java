@@ -39,14 +39,14 @@ Employees can:
 * `/login` - for authentication
 * `/users` - for admins to GET and POST to all users
 * `/users/{id}` - for admins to GET, PUT, or DELETE a single user
-* `/expenses` - for employees to GET and POST new expense reimbursement requests
-* `/expenses/{id}` - for employees to GET, PUT, or DELETE an expense
-* `/expenses/{id}/receipt` - for employees to POST an image of their receipt
-* `/expenses/{id}/approve` - for managers to approve an expense via PUT requests
-* `/expenses/{id}/reject` - for managers to reject an expense via DELETE requests
+* `/reimbursements` - for employees to GET and POST new expense reimbursement requests
+* `/reimbursements/{id}` - for employees to GET, PUT, or DELETE an expense
+* `/reimbursements/{id}/receipt` - for employees to POST an image of their receipt
+* `/reimbursements/{id}/approve` - for managers to approve an expense via PUT requests
+* `/reimbursements/{id}/reject` - for managers to reject an expense via DELETE requests
 
 Any collection endpoint can be paginated via a query param `?limit=5&offset=10`.
-Also, query params for expenses include: `?before=12-05-2018&after=07-04-2017` for filtering by date.
+Also, query params for reimbursements include: `?before=12-05-2018&after=07-04-2017` for filtering by date.
 
 ## Tech
 

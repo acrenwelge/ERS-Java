@@ -9,9 +9,10 @@ import javax.persistence.Id;
 @Entity
 public class Expense {
 	
-	public Expense(long id, double amount) {
+	public Expense(long id, double amount, String description) {
 		this.id = id;
 		this.amount = amount;
+		this.description = description;
 	}
 	
 	public Expense() {}

@@ -5,6 +5,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resources;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.andrew.ers.controllers.ReimbursementController;
 import com.andrew.ers.dto.ReimbursementDTO;
+import com.andrew.ers.model.AppUser;
 import com.andrew.ers.model.Expense;
 import com.andrew.ers.model.Reimbursement;
 import com.andrew.ers.repositories.ReimbursementRepo;
@@ -64,5 +67,61 @@ public class ReimbursementService {
 	public Resources<ReimbursementDTO> getReimbursementsForUser(String username) {
 		return new Resources<>(convert(userRepo.findByUsername(username).getReimbursements()), 
 				linkTo(methodOn(ReimbursementController.class).getAllReimbursements()).withSelfRel());
+	}
+	
+	/**
+	 * Adds a new reimbursement to the user, then updates the user which
+	 * persists the new reimbursement to the database 
+	 * @return 
+	 */
+	public Resources<ReimbursementDTO> submitNewReimbursement(String username, ReimbursementDTO newR) {
+		AppUser user = userRepo.findByUsername(username);
+		newR.setApproved(false); // every new request is not approved by default
+		Reimbursement re = convert(newR);
+		reimbursementRepo.save(re);
+		user.addReimbursement(re);
+		AppUser updatedUser = userRepo.save(user);
+		List<Reimbursement> newList = updatedUser.getReimbursements();
+		return new Resources<>(convert(newList), 
+				linkTo(methodOn(ReimbursementController.class).getAllReimbursements()).withSelfRel());
+	}
+	
+	/**
+	 * Approves all reimbursement requests from a user
+	 */
+	public void approveAllReimbursements(String username) {
+		AppUser user = userRepo.findByUsername(username);
+		user.getReimbursements().forEach((r) -> r.setApproved(true));
+		userRepo.save(user);
+	}
+	
+	/**
+	 * Approves the reimbursement request of the given id
+	 * @param id
+	 */
+	public void approveReimbursement(long id) {
+		Optional<Reimbursement> optR = reimbursementRepo.findById(id);
+		if (optR.isPresent()) {
+			Reimbursement r = optR.get();
+			r.setApproved(true);
+			reimbursementRepo.save(r);
+		} else {
+			throw new NoSuchElementException("Cannot find reimbursment of id " + id);
+		}
+	}
+	
+	/**
+	 * Denies the reimbursement request of the given id
+	 * @param id
+	 */
+	public void denyReimbursement(long id) {
+		Optional<Reimbursement> optR = reimbursementRepo.findById(id);
+		if (optR.isPresent()) {
+			Reimbursement r = optR.get();
+			r.setApproved(false);
+			reimbursementRepo.save(r);
+		} else {
+			throw new NoSuchElementException("Cannot find reimbursment of id " + id);
+		}
 	}
 }
