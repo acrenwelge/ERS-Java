@@ -27,9 +27,6 @@ public class Expense {
 	@Column
 	private String description;
 	
-	@Column
-	private String receiptURL;
-
 	public long getId() {
 		return id;
 	}
@@ -54,12 +51,4 @@ public class Expense {
 		description = s;
 	}
 
-	public String getReceiptURL() {
-		return receiptURL;
-	}
-
-	public void setReceiptURL(String receiptURL) {
-		this.receiptURL = receiptURL;
-	}
-	
 }

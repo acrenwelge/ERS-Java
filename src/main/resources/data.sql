@@ -9,6 +9,6 @@ INSERT INTO reimbursement(user_id, is_approved) VALUES (1, false);
 INSERT INTO reimbursement(user_id, is_approved) VALUES (1, true);
 
 -- expenses
-INSERT INTO expense(reimbursement_id, amount, description, receiptURL) VALUES (1, 1.99, 'some description', null);
-INSERT INTO expense(reimbursement_id, amount, description, receiptURL) VALUES (1, 5.31, 'some description', null);
-INSERT INTO expense(reimbursement_id, amount, description, receiptURL) VALUES (1, 9.76, 'some description', null);
+INSERT INTO expense(reimbursement_id, amount, description) VALUES (1, 1.99, 'some description');
+INSERT INTO expense(reimbursement_id, amount, description) VALUES (1, 5.31, 'some description');
+INSERT INTO expense(reimbursement_id, amount, description) VALUES (1, 9.76, 'some description');

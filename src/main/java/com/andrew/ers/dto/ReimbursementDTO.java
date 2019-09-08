@@ -2,14 +2,12 @@ package com.andrew.ers.dto;
 
 import java.util.List;
 
-import com.andrew.ers.model.Expense;
-
 public class ReimbursementDTO {
 	
 	private long id;
 	private double total;
 	private boolean isApproved;
-	private List<Expense> expenses;
+	private List<ExpenseDTO> expenses;
 	
 	public boolean isApproved() {
 		return isApproved;
@@ -35,11 +33,11 @@ public class ReimbursementDTO {
 		this.total = total;
 	}
 
-	public List<Expense> getExpenses() {
+	public List<ExpenseDTO> getExpenses() {
 		return expenses;
 	}
 
-	public void setExpenses(List<Expense> expenses) {
+	public void setExpenses(List<ExpenseDTO> expenses) {
 		this.expenses = expenses;
 	}
 	

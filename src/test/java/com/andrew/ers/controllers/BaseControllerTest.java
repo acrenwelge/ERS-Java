@@ -21,5 +21,7 @@ public class BaseControllerTest {
 	
 	@Autowired
 	ObjectMapper mapper;
+	
+	protected static final String testUsername = "acrenwelge";
 
 }

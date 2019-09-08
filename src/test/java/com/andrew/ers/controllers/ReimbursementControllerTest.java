@@ -3,6 +3,7 @@ package com.andrew.ers.controllers;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -13,19 +14,20 @@ import java.util.List;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.andrew.ers.dto.ExpenseDTO;
 import com.andrew.ers.dto.ReimbursementDTO;
-import com.andrew.ers.model.Expense;
 
 public class ReimbursementControllerTest extends BaseControllerTest {
 	
 	private void generateMockReimbursementData() throws Exception {
 		ReimbursementDTO r = new ReimbursementDTO();
-		List<Expense> exps = new ArrayList<>();
-		exps.add(new Expense(1L, 30.21, "test"));
-		exps.add(new Expense(1L, 30.21, "abc"));
-		exps.add(new Expense(1L, 30.21, "description here"));
+		List<ExpenseDTO> exps = new ArrayList<>();
+		exps.add(new ExpenseDTO(1L, 30.21, "test", null));
+		exps.add(new ExpenseDTO(1L, 30.21, "abc", null));
+		exps.add(new ExpenseDTO(1L, 30.21, "description here", null));
 		r.setExpenses(exps);
 		String json = mapper.writeValueAsString(r);
 		mvc.perform(post("/users/acrenwelge/reimbursements").contentType(MediaType.APPLICATION_JSON).content(json));
@@ -80,5 +82,14 @@ public class ReimbursementControllerTest extends BaseControllerTest {
 		MockHttpServletResponse r = result.getResponse();
 		ReimbursementDTO resp = mapper.readValue(r.getContentAsString(), ReimbursementDTO.class);
 		assertFalse(resp.isApproved());
+	}
+		
+	@Test
+	public void testMultipartReceiptUpload() throws Exception {
+		MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt",
+                "text/plain", "MULTIPART UPLOAD TEST SUCCESSFULL!!!".getBytes());
+        this.mvc.perform(multipart("/users/acrenwelge/expenses/1")
+        		.file(multipartFile).contentType(MediaType.MULTIPART_FORM_DATA))
+                .andExpect(status().isFound());
 	}
 }
