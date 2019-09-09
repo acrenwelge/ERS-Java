@@ -27,12 +27,15 @@ public class ReimbursementService {
 	ReimbursementRepo reimbursementRepo;
 	
 	@Autowired
+	ExpenseService expService;
+	
+	@Autowired
 	UserRepo userRepo;
 	
-	public static ReimbursementDTO convert(Reimbursement r) {
+	public ReimbursementDTO convert(Reimbursement r) {
 		ReimbursementDTO  newr = new ReimbursementDTO();
 		newr.setId(r.getId());
-		newr.setExpenses(ExpenseService.convert(r.getExpenses()));
+		newr.setExpenses(expService.convert(r.getExpenses()));
 		newr.setApproved(r.isApproved());
 		double tot = 0;
 		for (ExpenseDTO e : newr.getExpenses()) {
@@ -42,7 +45,7 @@ public class ReimbursementService {
 		return newr;
 	}
 	
-	public static List<ReimbursementDTO> convert(List<Reimbursement> listr) {
+	public List<ReimbursementDTO> convert(List<Reimbursement> listr) {
 		List<ReimbursementDTO> listDTO = new ArrayList<>();
 		for (Reimbursement re : listr) {
 			listDTO.add(convert(re));
@@ -50,19 +53,19 @@ public class ReimbursementService {
 		return listDTO;
 	}
 	
-	public static Reimbursement convert(ReimbursementDTO dto) {
+	public Reimbursement convert(ReimbursementDTO dto) {
 		Reimbursement  newr = new Reimbursement();
 		newr.setId(dto.getId());
-		newr.setExpenses(ExpenseService.convertDTO(dto.getExpenses()));
+		newr.setExpenses(expService.convertDTO(dto.getExpenses()));
 		newr.setApproved(dto.isApproved());
 		// total not recorded in DB - can be calculated from expenses on client side
 		return newr;
 	}
 	
-	public static Reimbursement convertDTO(ReimbursementDTO r) {
+	public Reimbursement convertDTO(ReimbursementDTO r) {
 		Reimbursement newr = new Reimbursement();
 		newr.setId(r.getId());
-		newr.setExpenses(ExpenseService.convertDTO(r.getExpenses()));
+		newr.setExpenses(expService.convertDTO(r.getExpenses()));
 		newr.setApproved(r.isApproved());
 		return newr;
 	}
@@ -87,8 +90,7 @@ public class ReimbursementService {
 	}
 	
 	/**
-	 * Adds a new reimbursement to the user, then updates the user which
-	 * persists the new reimbursement to the database 
+	 * Adds a new reimbursement to the user, then updates the user
 	 * @return 
 	 */
 	public Resources<ReimbursementDTO> submitNewReimbursement(String username, ReimbursementDTO newR) {

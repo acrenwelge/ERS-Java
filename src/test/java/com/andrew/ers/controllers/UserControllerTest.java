@@ -1,6 +1,7 @@
 package com.andrew.ers.controllers;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -58,5 +59,11 @@ public class UserControllerTest extends BaseControllerTest {
 		mvc.perform(put("/users/1").contentType(MediaType.APPLICATION_JSON_UTF8).content(json))
 		  .andExpect(status().is2xxSuccessful());
 		mvc.perform(get("/users/1")).andExpect(jsonPath("$.firstName", is("NewFirstName")));
+	}
+	
+	@Test
+	public void deactivateUser() throws Exception {
+		mvc.perform(delete("/users/1")).andExpect(status().is2xxSuccessful());
+		mvc.perform(get("/users/1")).andExpect(jsonPath("$.active", is("false")));
 	}
 }

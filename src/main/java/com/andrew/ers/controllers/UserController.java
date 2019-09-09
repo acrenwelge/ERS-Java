@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.andrew.ers.dto.UserDTO;
+import com.andrew.ers.exceptions.UserAlreadyExistsException;
 import com.andrew.ers.services.UserService;
 
 @RestController
@@ -39,7 +40,11 @@ public class UserController {
 		if (! newUser.getPassword().equals(newUser.getConfirmPassword())) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		userService.registerNewUser(UserService.convert(newUser));
+		try {
+			userService.registerNewUser(UserService.convert(newUser));			
+		} catch (UserAlreadyExistsException uae) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		}
 		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 	
@@ -51,7 +56,7 @@ public class UserController {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deactivateUser(@PathVariable long id) {
-		userService.deleteUser(id);
+		userService.deactivateUser(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

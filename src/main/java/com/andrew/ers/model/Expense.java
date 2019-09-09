@@ -27,6 +27,8 @@ public class Expense {
 	@Column
 	private String description;
 	
+	// TODO: implement bi-directional mapping of Expense/Reimbursement/User so that we can grab username from Expense...
+	
 	public long getId() {
 		return id;
 	}

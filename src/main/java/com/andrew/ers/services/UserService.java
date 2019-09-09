@@ -5,6 +5,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import com.andrew.ers.controllers.UserController;
 import com.andrew.ers.dto.UserDTO;
+import com.andrew.ers.exceptions.ResourceNotFoundException;
 import com.andrew.ers.exceptions.UserAlreadyExistsException;
 import com.andrew.ers.model.AppUser;
 import com.andrew.ers.model.AppUserPrincipal;
@@ -91,8 +93,11 @@ public class UserService implements UserDetailsService {
         return new AppUserPrincipal(user);
 	}
 	
-	public void deleteUser(long id) {
-		userRepo.deleteById(id);
+	public void deactivateUser(long id) {
+		Optional<AppUser> optUser = userRepo.findById(id);
+		if (optUser.isPresent()) {
+			optUser.get().setActive(false);
+		} else throw new ResourceNotFoundException("Could not deactivate - no user found with ID=" + id);
 	}
 	
 	public void saveUser(UserDTO userToSave) {

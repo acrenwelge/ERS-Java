@@ -6,32 +6,52 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.HttpMethod;
 import com.andrew.ers.dto.ExpenseDTO;
 import com.andrew.ers.model.Expense;
 import com.andrew.ers.repositories.ExpenseRepo;
 
 @Service
 public class ExpenseService {
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
 	@Autowired
-	ExpenseRepo repo;
+	private ExpenseRepo repo;
 	
 	@Autowired
-	S3Service s3;
+	private S3Service s3;
 	
-	public static ExpenseDTO convert(Expense e) {
+	public URL getPresignedURLForUserExpenseReceipt(String username, Expense e) throws IOException {
+		String key = s3.getBucketKey(username, e.getId());
+		return  s3.getPresignedReceiptUrl(key, HttpMethod.GET);
+	}
+	
+	/**
+	 * Converts database expense entity to API service object, retrieving the S3 presigned URL in the process
+	 */
+	public ExpenseDTO convert(Expense e) {
 		ExpenseDTO dto = new ExpenseDTO();
 		dto.setId(e.getId());
 		dto.setAmount(e.getAmount());
 		dto.setDescription(e.getDescription());
+		URL tempUrl = null;
+		try {
+			String uname = e.getUsername();
+			tempUrl = getPresignedURLForUserExpenseReceipt(uname, e);
+		} catch (IOException ioe) {
+			log.error(ioe.getMessage(), ioe);
+		}
+		dto.setReceiptURL(tempUrl);
 		return dto;
 	}
 	
-	public static Expense convertDTO(ExpenseDTO e) {
+	public Expense convertDTO(ExpenseDTO e) {
 		Expense expense = new Expense();
 		expense.setId(e.getId());
 		expense.setAmount(e.getAmount());
@@ -39,7 +59,7 @@ public class ExpenseService {
 		return expense;
 	}
 	
-	public static List<ExpenseDTO> convert(List<Expense> exps) {
+	public List<ExpenseDTO> convert(List<Expense> exps) {
 		List<ExpenseDTO> list = new ArrayList<>(exps.size());
 		for (Expense e : exps) {
 			list.add(convert(e));
@@ -47,7 +67,7 @@ public class ExpenseService {
 		return list;
 	}
 	
-	public static List<Expense> convertDTO(List<ExpenseDTO> exps) {
+	public List<Expense> convertDTO(List<ExpenseDTO> exps) {
 		List<Expense> list = new ArrayList<>(exps.size());
 		for (ExpenseDTO e : exps) {
 			list.add(convertDTO(e));

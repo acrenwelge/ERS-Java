@@ -36,6 +36,8 @@ public class UserDTO {
 	@NotEmpty
 	private String email;
 	
+	private boolean active = true; // active by default
+	
 	private List<Reimbursement> reimbursements;
 	
 	private String address;
@@ -116,14 +118,24 @@ public class UserDTO {
 		return id;
 	}
 
+	public boolean getIsActive() {
+		return active;
+	}
+	
+	public void setIsActive(boolean b) {
+		this.active = b;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (active ? 1231 : 1237);
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((confirmPassword == null) ? 0 : confirmPassword.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
+		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
@@ -139,6 +151,8 @@ public class UserDTO {
 		if (getClass() != obj.getClass())
 			return false;
 		UserDTO other = (UserDTO) obj;
+		if (active != other.active)
+			return false;
 		if (address == null) {
 			if (other.address != null)
 				return false;
@@ -158,6 +172,8 @@ public class UserDTO {
 			if (other.firstName != null)
 				return false;
 		} else if (!firstName.equals(other.firstName))
+			return false;
+		if (id != other.id)
 			return false;
 		if (lastName == null) {
 			if (other.lastName != null)
@@ -179,8 +195,9 @@ public class UserDTO {
 
 	@Override
 	public String toString() {
-		return "User [firstName=" + firstName + ", lastName=" + lastName + ", password=" + password
-				+ ", email=" + email + ", address=" + address + "]";
+		return "UserDTO [id=" + id + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", password=" + password + ", confirmPassword=" + confirmPassword + ", email=" + email + ", active="
+				+ active + ", reimbursements=" + reimbursements + ", address=" + address + "]";
 	}
-
+	
 }

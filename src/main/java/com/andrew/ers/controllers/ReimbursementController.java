@@ -60,12 +60,6 @@ public class ReimbursementController {
 		}
 	}
 	
-	@GetMapping("/users/{username}/reimbursements")
-	public ResponseEntity<?> getReimbursementsForUser(@PathVariable String username) {
-		Resources<ReimbursementDTO> list = rservice.getReimbursementsForUser(username);
-		return new ResponseEntity<Resources<ReimbursementDTO>>(list, HttpStatus.OK);
-	}
-	
 	@PutMapping(value="/reimbursements/{id}/status",consumes=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> performActionOnReimbursement(@PathVariable long id, @RequestBody ReimbursementAction update) {
 		System.out.println(update);
@@ -78,6 +72,12 @@ public class ReimbursementController {
 		} else {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	@GetMapping("/users/{username}/reimbursements")
+	public ResponseEntity<?> getReimbursementsForUser(@PathVariable String username) {
+		Resources<ReimbursementDTO> list = rservice.getReimbursementsForUser(username);
+		return new ResponseEntity<Resources<ReimbursementDTO>>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping(value="/users/{username}/reimbursements",consumes=MediaType.APPLICATION_JSON_VALUE)

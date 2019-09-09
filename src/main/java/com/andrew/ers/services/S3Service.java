@@ -29,6 +29,7 @@ public class S3Service {
 	public static final Regions REGION = Regions.US_EAST_1;
 	public static final String BUCKET_NAME = "ers-app-receipts";
 	public static final String KEY_PREFIX = "receipt";
+	public static final int URL_TIMEOUT_HOURS = 1;
 	
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	
@@ -42,11 +43,11 @@ public class S3Service {
 		return String.format("%s/%s-%d", username, KEY_PREFIX, expenseId);
     }
 	
-	private Date getExpireDate(int hoursLater) {
+	private Date getExpireDate() {
 		// Set the pre-signed URL to expire after one hour.
         java.util.Date expiration = new java.util.Date();
         long expTimeMillis = expiration.getTime();
-        expTimeMillis += 1000 * 60 * 60 * hoursLater;
+        expTimeMillis += 1000 * 60 * 60 * URL_TIMEOUT_HOURS;
         expiration.setTime(expTimeMillis);
         return expiration;
 	}
@@ -54,9 +55,7 @@ public class S3Service {
 	public URL uploadReceipt(String username, long expenseId, MultipartFile file) throws IOException {
 		String objectKey = getBucketKey(username, expenseId);
 		try {
-            Date expires = getExpireDate(1);
-
-            URL url = getPresignedReceiptUrl(objectKey, expires, HttpMethod.PUT);
+            URL url = getPresignedReceiptUrl(objectKey, HttpMethod.PUT);
 
             // Create the connection and use it to upload the new object using the pre-signed URL.
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -89,12 +88,12 @@ public class S3Service {
 		return null;
 	}
 
-    public URL getPresignedReceiptUrl(String key, Date expiration, HttpMethod method) throws IOException {
+    public URL getPresignedReceiptUrl(String key, HttpMethod method) throws IOException {
     		// Generate the pre-signed URL.
         log.info("Generating pre-signed URL.");
         GeneratePresignedUrlRequest generatePresignedUrlRequest = new GeneratePresignedUrlRequest(BUCKET_NAME, key)
                 .withMethod(method)
-                .withExpiration(expiration);
+                .withExpiration(getExpireDate());
         URL url = s3Client.generatePresignedUrl(generatePresignedUrlRequest);
         log.info("Presigned URL: " + url.toString());
         return url;
