@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -20,9 +20,16 @@ public class Reimbursement {
 	@Column
 	private boolean isApproved = false;
 	
-	@OneToMany
-	@JoinColumn(name="reimbursement_id")
+	@ManyToOne
+	private AppUser user;
+	
+	@OneToMany(mappedBy="reimbursement")
+	//@JoinColumn(name="reimbursement_id")
 	private List<Expense> expenses;
+	
+	public String getUsername() {
+		return user.getUsername();
+	}
 
 	public long getId() {
 		return id;

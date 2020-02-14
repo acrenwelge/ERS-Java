@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Expense {
@@ -27,7 +28,13 @@ public class Expense {
 	@Column
 	private String description;
 	
+	@ManyToOne
+	private Reimbursement reimbursement;
+	
 	// TODO: implement bi-directional mapping of Expense/Reimbursement/User so that we can grab username from Expense...
+	public String getAssociatedUsername() {
+		return reimbursement.getUsername();
+	}
 	
 	public long getId() {
 		return id;

@@ -42,7 +42,7 @@ public class ExpenseService {
 		dto.setDescription(e.getDescription());
 		URL tempUrl = null;
 		try {
-			String uname = e.getUsername();
+			String uname = e.getAssociatedUsername();
 			tempUrl = getPresignedURLForUserExpenseReceipt(uname, e);
 		} catch (IOException ioe) {
 			log.error(ioe.getMessage(), ioe);

@@ -62,7 +62,6 @@ public class ReimbursementController {
 	
 	@PutMapping(value="/reimbursements/{id}/status",consumes=MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> performActionOnReimbursement(@PathVariable long id, @RequestBody ReimbursementAction update) {
-		System.out.println(update);
 		if (update.action.equals(ReimbursementAction.approve)) {
 			rservice.approveReimbursement(id);
 			return new ResponseEntity<>(HttpStatus.NO_CONTENT);
